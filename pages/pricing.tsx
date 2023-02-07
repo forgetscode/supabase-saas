@@ -1,8 +1,9 @@
 import initStripe from "stripe";
 import { product } from "../types/lesson";
 import { useUserProfile } from "../hooks/use-profile";
-import { supabase } from "../utils/supabase";
 import Link from 'next/link';
+
+
 
 const Pricing = ({ plans }: { plans: product[] }) => {
     const { fetching: loadingProfile, error, profile } = useUserProfile();
@@ -16,45 +17,37 @@ const Pricing = ({ plans }: { plans: product[] }) => {
         window.location.href = data.stripeSession.url;
     };
 
-    
-    function handleClick() {
-        supabase.auth.signInWithOAuth({ provider: "github" }).then(response => {
-          // handle response
-        });
-      }
-
-    const showSubscribeButton = !!profile && !profile.is_subscribed;
+    const showSubscribeButton = profile && !profile.is_subscribed;
     const showCreateAccountButton = !profile;
     const showManageSubscriptionButton = profile && profile.is_subscribed;
 
     return (
         <div className="w-full max-w-3xl mx-auto py-16 flex justify-around">
-            {plans.map((plan) => (
-                <div
-                    key={plan.id}
-                    className="w-80 flex flex-col rounded shadow px-6 py-4 space-y-2"
-                >
+            {plans.map((plan: product) => (
+                <div key={plan.id} className="w-80 rounded shadow px-6 py-4">
                     <h2 className="text-xl">{plan.name}</h2>
                     <p className="text-gray-500">
                         ${plan.price / 100} / {plan.interval}
                     </p>
-                    { loadingProfile ? <></> : 
-                        <div className="border p-6 flex justify-center pointer-cursor bg-slate-100 hover:bg-slate-200">
-                        {showSubscribeButton && (
-                            <button onClick={processSubscription(plan.id)}>
-                            Subscribe
-                            </button>
-                        )}
-                        {showCreateAccountButton && (
-                            <button onClick={handleClick}>Create Account</button>
-                        )}
-                        {showManageSubscriptionButton && (
-                            <Link href="/dashboard">
-                                <a>Manage Subscription</a>
-                            </Link>
-                        )}
+                    {!loadingProfile && (
+                        <div>
+                            {showSubscribeButton && (
+                                <button onClick={processSubscription(plan.id)} className="w-full justify-center rounded-lg text-sm font-semibold py-3 px-4 mt-8 bg-violet-800 text-white hover:bg-violet-500">
+                                    Subscribe
+                                </button>
+                            )}
+                            {showCreateAccountButton && (
+                                <Link href="/login" legacyBehavior className="w-full justify-center rounded-lg text-sm font-semibold py-3 px-4 mt-8 bg-violet-800 text-white hover:bg-violet-500">
+                                    Create Account
+                                </Link>
+                            )}
+                            {showManageSubscriptionButton && (
+                                <Link href="/dashboard" legacyBehavior>
+                                    <a className="w-full block justify-center rounded-lg text-center text-sm font-semibold py-3 px-4 mt-8 bg-violet-800 text-white hover:bg-violet-500">Manage Subscription</a>
+                                </Link>
+                            )}
                         </div>
-                    }
+                    )}
                 </div>
             ))}
         </div>

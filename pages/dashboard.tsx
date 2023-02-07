@@ -6,8 +6,10 @@ import { useUserProfile } from "../hooks/use-profile";
 export default function Dashboard() {
     const { fetching: loadingProfile, error, profile } = useUserProfile();
     const router = useRouter();
+
     const loadPortal = async () => {
         const response = await fetch("/api/portal");
+        console.log(response);
         const data = await response.json();
 
         router.push(data.stripeSession.url);

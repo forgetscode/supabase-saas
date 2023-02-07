@@ -22,7 +22,7 @@ export interface premium_content {
 }
 
 export interface product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   interval: string;

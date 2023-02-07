@@ -1,12 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-
-    if (req.method === 'POST') {
-        const { priceId } = req.query;
-
+const handler = async (req, res) => {
+    if (req.method === 'GET') {
         // Create authenticated Supabase Client
         const supabaseServerClient = createServerSupabaseClient({
             req,
@@ -35,27 +31,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 return res.status(404).send("Stripe customer not found");
             }
 
-            const lineItems = [{
-                price: priceId as string,
-                quantity: 1,
-            }];
-
-            const stripeSession = await stripe.checkout.sessions.create({
-                customer: data.stripe_customer as string,
-                mode: "subscription",
-                payment_method_types: ["card"],
-                currency: "cad",
-                line_items: lineItems,
-                success_url: `${process.env.CLIENT_URL}/payment/success`,
-                cancel_url: `${process.env.CLIENT_URL}/payment/cancelled`,
+            const stripeSession = await stripe.billingPortal.sessions.create({
+                customer: data.stripe_customer,
+                return_url: `${process.env.CLIENT_URL}/dashboard`,
             });
 
             res.status(200).json({ stripeSession });
-        } catch (err:any) {
+        } catch (err) {
             res.status(err.statusCode || 500).json(err.message);
         }
     } else {
-        res.setHeader('Allow', 'POST');
+        res.setHeader('Allow', 'GET');
         res.status(405).end('Method Not Allowed');
     }
 };

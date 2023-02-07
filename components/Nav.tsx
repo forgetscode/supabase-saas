@@ -8,7 +8,7 @@ const Nav = () => {
             <div className="flex items-center flex-shrink-0 text-white mr-6">
                 <span className="font-semibold text-xl tracking-tight">
                     <Link href="/">
-                        <div>Bingo Bango</div>
+                        <div>Lessons</div>
                     </Link>
                 </span>
             </div>
@@ -27,11 +27,6 @@ const Nav = () => {
             </div>
             <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                 <div className="text-sm lg:flex-grow">
-                    <Link href="/lessons">
-                        <div className="block mt-4 lg:inline-block lg:mt-0 text-gray-200 hover:text-white mr-4">
-                            Lessons
-                        </div>
-                    </Link>
                     <Link href="/dashboard">
                         <div className="block mt-4 lg:inline-block lg:mt-0 text-gray-200 hover:text-white mr-4">
                             Dashboard
