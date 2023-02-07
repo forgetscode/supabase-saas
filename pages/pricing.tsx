@@ -2,7 +2,7 @@ import initStripe from "stripe";
 import { product } from "../types/lesson";
 import { useUserProfile } from "../hooks/use-profile";
 import Link from 'next/link';
-
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
 const Pricing = ({ plans }: { plans: product[] }) => {
@@ -55,7 +55,6 @@ const Pricing = ({ plans }: { plans: product[] }) => {
 };
 
 export const getStaticProps = async () => {
-    const stripe = initStripe(process.env.STRIPE_SECRET_KEY);
 
     const { data: prices } = await stripe.prices.list();
 
